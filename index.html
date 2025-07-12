@@ -573,7 +573,7 @@ git push -u origin main
     input.value = "";
 
     try {
-      const response = await fetch("https://hub.infiny.com.br/webhook-test/infiny", {
+      const response = await fetch("https://hub.infiny.com.br/webhook/infiny", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ mensagem: msg }) // ajuste conforme esperado
