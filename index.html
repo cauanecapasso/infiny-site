@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8">git remote add origin https://github.com/cauanecapasso/infiny-site.git
+git branch -M main
+git push -u origin main
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Infiny - Consultoria em IA e Automação</title>
     <style>
@@ -543,23 +546,62 @@
         }
     </style>
 </head>
+<!-- Chatbox fixo no canto da tela -->
+<div id="chatbox" style="position: fixed; bottom: 20px; right: 20px; width: 320px; background: #fff; border-radius: 12px; box-shadow: 0 0 15px rgba(0,0,0,0.3); font-family: sans-serif; z-index: 9999;">
+  <div style="background: #667eea; color: white; padding: 12px 16px; font-weight: bold; border-top-left-radius: 12px; border-top-right-radius: 12px;">
+    👋 Infiny Chat
+  </div>
+  <div id="chat-messages" style="padding: 12px; height: 250px; overflow-y: auto; font-size: 14px;"></div>
+  <div style="display: flex; border-top: 1px solid #eee;">
+    <input id="chat-input" type="text" placeholder="Digite sua mensagem..." style="flex: 1; padding: 10px; border: none; font-size: 14px;">
+    <button onclick="sendMessage()" style="background: #667eea; color: white; border: none; padding: 10px 16px; cursor: pointer;">➤</button>
+  </div>
+</div>
+
+<script>
+  async function sendMessage() {
+    const input = document.getElementById("chat-input");
+    const chat = document.getElementById("chat-messages");
+    const msg = input.value.trim();
+    if (!msg) return;
+
+    // Exibe a mensagem do usuário
+    const userMsg = document.createElement("div");
+    userMsg.style.margin = "6px 0";
+    userMsg.innerHTML = `<strong>Você:</strong> ${msg}`;
+    chat.appendChild(userMsg);
+    input.value = "";
+
+    try {
+      const response = await fetch("https://hub.infiny.com.br/webhook/infiny", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mensagem: msg }) // Altere se o nome do campo for diferente
+      });
+
+      const data = await response.json();
+
+      const botMsg = document.createElement("div");
+      botMsg.style.margin = "6px 0";
+      botMsg.innerHTML = `<strong>InfinyBot:</strong> ${data.output || "Mensagem recebida."}`;
+      chat.appendChild(botMsg);
+    } catch (error) {
+      const errorMsg = document.createElement("div");
+      errorMsg.style.margin = "6px 0";
+      errorMsg.style.color = "red";
+      errorMsg.textContent = "❌ Erro ao enviar mensagem.";
+      chat.appendChild(errorMsg);
+    }
+
+    // Scroll para o final
+    chat.scrollTop = chat.scrollHeight;
+  }
+</script>
 <body>
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
-            <svg class="logo-nav" viewBox="0 0 400 120" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <linearGradient id="navGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" style="stop-color:#8B5CF6"/>
-                        <stop offset="100%" style="stop-color:#3B82F6"/>
-                    </linearGradient>
-                </defs>
-                <path d="M20 20 Q60 20 60 60 Q60 100 20 100 Q60 100 60 60 Q60 20 100 20" 
-                      fill="none" 
-                      stroke="url(#navGradient)" 
-                      stroke-width="4"/>
-                <text x="130" y="75" fill="#f5f5f7" font-family="Arial, sans-serif" font-size="36" font-weight="600">Infiny</text>
-            </svg>
+            <img src="logo.png" alt="Logo Infiny" class="logo-nav">
             <ul class="nav-links">
                 <li><a href="#services">Serviços</a></li>
                 <li><a href="#process">Processo</a></li>
@@ -578,19 +620,7 @@
         </div>
         
         <div class="hero-content">
-            <svg class="hero-logo" viewBox="0 0 400 120" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <linearGradient id="heroGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" style="stop-color:#8B5CF6"/>
-                        <stop offset="100%" style="stop-color:#3B82F6"/>
-                    </linearGradient>
-                </defs>
-                <path d="M20 20 Q60 20 60 60 Q60 100 20 100 Q60 100 60 60 Q60 20 100 20" 
-                      fill="none" 
-                      stroke="url(#heroGradient)" 
-                      stroke-width="4"/>
-                <text x="130" y="75" fill="#f5f5f7" font-family="Arial, sans-serif" font-size="48" font-weight="700">Infiny</text>
-            </svg>
+            <img src="logo2.png" alt="Logo Infiny" class="logo-nav">
             <h1 class="hero-title">Transforme seu negócio com IA</h1>
             <p class="hero-subtitle">
                 Consultoria especializada na otimização de processos operacionais e estratégicos, 
